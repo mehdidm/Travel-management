@@ -29,7 +29,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public ReservationEntity saveReservation(ReservationEntity reservationEntity) {
-        return null;
+        return reservationRepository.save(reservationEntity);
     }
 
     @Override
