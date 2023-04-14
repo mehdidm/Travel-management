@@ -11,6 +11,18 @@ public class ReservationEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
+
+    @Column(name = "cin")
+    private Long cin;
+
+    @Column(name = "email")
+    private String email;
+
+    @Column(name = "status")
+    private String status;
+
+    @Column(name = "phone")
+    private String phone;
     @Column(name = "guest_name")
     private String guestName;
 
@@ -31,8 +43,12 @@ public class ReservationEntity {
     public ReservationEntity() {
     }
 
-    public ReservationEntity(Long id, String guestName, LocalDate checkinDate, String hotel, LocalDate checkoutDate, String description) {
+    public ReservationEntity(Long id, Long cin, String email, String status, String phone, String guestName, LocalDate checkinDate, String hotel, LocalDate checkoutDate, String description) {
         this.id = id;
+        this.cin = cin;
+        this.email = email;
+        this.status = status;
+        this.phone = phone;
         this.guestName = guestName;
         this.checkinDate = checkinDate;
         this.hotel = hotel;
@@ -46,6 +62,38 @@ public class ReservationEntity {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getCin() {
+        return cin;
+    }
+
+    public void setCin(Long cin) {
+        this.cin = cin;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getGuestName() {

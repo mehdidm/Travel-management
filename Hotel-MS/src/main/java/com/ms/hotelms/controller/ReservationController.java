@@ -24,7 +24,7 @@ public class ReservationController {
         return reservationService.findById(id);
     }
     @PostMapping
-    public ReservationEntity saveReservation(@RequestBody ReservationEntity reservationEntity){
+    public String saveReservation(@RequestBody ReservationEntity reservationEntity){
         return reservationService.saveReservation(reservationEntity);
     }
 

@@ -10,8 +10,9 @@ public interface ReservationService {
     List<ReservationEntity> findAllReservation();
 
     Optional<ReservationEntity> findById(Long id);
-    ReservationEntity saveReservation(ReservationEntity reservationEntity);
+    String saveReservation(ReservationEntity reservationEntity);
     ReservationEntity updateReservation(ReservationEntity reservationEntity);
+    void cancelReservation (long Message);
     void deleteReservation (Long id);
 
 
