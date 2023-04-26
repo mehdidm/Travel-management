@@ -41,7 +41,7 @@ public class ReservationServiceImpl implements ReservationService {
     public String saveReservation(ReservationEntity reservationEntity) {
         ReservationEntity savedReservation = reservationRepository.saveAndFlush(reservationEntity);
         ResponseEntity<String> response = restTemplate.getForEntity(
-                "http://FRAUD-MS/checkFraud/{cin}/{reservationId}",
+                "http://fraud-ms/checkFraud/{cin}/{reservationId}",
                 String.class,
                 savedReservation.getCin(),
                 savedReservation.getId()

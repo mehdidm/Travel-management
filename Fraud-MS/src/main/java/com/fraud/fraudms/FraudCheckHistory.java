@@ -18,7 +18,7 @@ public class FraudCheckHistory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "cin")
     private Long cin;
 
     @Column(nullable = false)
