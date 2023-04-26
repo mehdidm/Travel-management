@@ -32,17 +32,40 @@ services:
     restart: unless-stopped
 
   eureka-server:
+    build:
+      context: ./Eureka-server
+      dockerfile: Dockerfile
     image: eureka-server
     container_name: eureka-server
     ports:
       - "8761:8761"
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
     networks:
       - spring
     depends_on:
       - zipkin
 
+
+  hotel-ms:
+      build:
+        context: ./Hotel-MS
+        dockerfile: Dockerfile
+      image: hotel-ms
+      container_name: Hotel-MS
+      ports:
+        - "8080:8080"
+      environment:
+        SPRING_APPLICATION_JSON: '{"eureka":{"client":{"serviceUrl":{"defaultZone":"http://eureka-server:8761/eureka"}}}}'
+        spring.datasource.url: jdbc:postgresql://postgres:5432/hotels
+      # volumes:
+      # - ./Hotel-MS/src/main/resources/application.properties:/app/config/application.properties   
+      networks:
+        - spring
+        - postgres
+      depends_on:
+        - zipkin
+        - eureka-server
+        - postgres
+        - rabbitmq
 #  apigw:
 #    image: amigoscode/apigw:latest
 #    container_name: apigw
@@ -72,16 +95,21 @@ services:
 #      - rabbitmq
 
   fraud-ms:
+    build:
+      context: ./Fraud-MS
+      dockerfile: Dockerfile
     image: fraud-ms
-    container_name: fraud
+    container_name: fraud-ms
     ports:
       - "8081:8081"
     environment:
-      - SPRING_PROFILES_ACTIVE=docker
+        SPRING_APPLICATION_JSON: '{"eureka":{"client":{"serviceUrl":{"defaultZone":"http://eureka-server:8761/eureka"}}}}'
+        spring.datasource.url: jdbc:postgresql://postgres:5432/fraud
     networks:
       - spring
       - postgres
     depends_on:
+      - eureka-server
       - zipkin
       - postgres
       - rabbitmq
@@ -117,7 +145,7 @@ services:
       - "15672:15672"
     networks:
       - spring
-
+      
 networks:
   postgres:
     driver: bridge
