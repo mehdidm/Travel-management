@@ -14,6 +14,7 @@
     <option name="ignoredFiles">
       <set>
         <option value="$PROJECT_DIR$/Hotel-MS/pom.xml" />
+        <option value="$PROJECT_DIR$/test/pom.xml" />
       </set>
     </option>
   </component>
