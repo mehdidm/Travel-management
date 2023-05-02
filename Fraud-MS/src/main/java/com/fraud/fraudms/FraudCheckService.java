@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 @Slf4j
@@ -36,23 +37,22 @@ public class FraudCheckService {
 //        }
 //    }
 
-    public boolean isFraudulentClient(Long cin, Long reservationId ) {
-        List<FraudCheckHistory> fraudCheckHistories = fraudCheckHistoryRepository
-                .findAllByCin(cin);
+    public boolean isFraudulentClient(Long cin, Long reservationId) {
+        List<FraudCheckHistory> fraudCheckHistories = fraudCheckHistoryRepository.findAllByCin(cin);
 
         if (fraudCheckHistories.isEmpty()) {
-            fraudCheckHistoryRepository.save(new FraudCheckHistory(cin, false, LocalDateTime.now()));
+            fraudCheckHistoryRepository.save(new FraudCheckHistory(cin, false, LocalDateTime.now(ZoneId.of("Africa/Tunis"))));
             return false;
         }
         LocalDateTime lastFraudCheck = fraudCheckHistories.get(0).getCreatedAt();
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Africa/Tunis"));
         if (Duration.between(lastFraudCheck, now).toMinutes() < 60) {
-            fraudCheckHistoryRepository.save(new FraudCheckHistory(cin, true, LocalDateTime.now()));
+            fraudCheckHistoryRepository.save(new FraudCheckHistory(cin, true, now));
             rabbitTemplate.convertAndSend("fraudExchange", "cancelReservation", reservationId);
             return true;
-        } else {
-            fraudCheckHistoryRepository.save(new FraudCheckHistory(cin, false, LocalDateTime.now()));
+        } else {      fraudCheckHistoryRepository.save(new FraudCheckHistory(cin, false, now));
             return false;
         }
     }
+
 }

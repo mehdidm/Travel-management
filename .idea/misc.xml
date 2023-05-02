@@ -7,6 +7,12 @@
         <option value="$PROJECT_DIR$/Trip-MS/pom.xml" />
       </list>
     </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/Hotel-MS/pom.xml" />
+        <option value="$PROJECT_DIR$/test/pom.xml" />
+      </set>
+    </option>
   </component>
   <component name="ProjectRootManager">
     <output url="file://$PROJECT_DIR$/out" />
