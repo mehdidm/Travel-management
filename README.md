@@ -1,25 +1,65 @@
-# Travel Management Microservice with Spring Boot
+# Travel Management Microservices :world_map:
 
-This is a microservice-based application developed with Spring Boot framework, designed to manage travel reservations and prevent fraudulent activities. This application consists of three microservices - Reservation, Fraud, and API Gateway - and utilizes Keycloak for secure authentication and authorization. The Eureka Server is also used for service registration and discovery.
+This is a set of microservices for managing travel reservations and bookings. The microservices included in the system are:
 
-## Microservices
+- :hotel: `hotel-ms`: Manages hotel reservations
+- :detective: `fraud-ms`: Detects fraudulent bookings
 
-### Reservation Microservice
 
-This microservice is responsible for managing travel reservations. It receives requests from clients and communicates with other microservices to perform necessary actions. The Reservation microservice uses a MySQL database to store reservation-related data. 
+The hotel reservation system that allows users to make and cancel reservations. The system has two microservices, namely the `hotel-ms` service and the `fraud-ms` service. The `hotel-ms` service is responsible for creating and managing reservations, while the `fraud-ms` service is responsible for detecting fraudulent reservations. When a reservation is made, the `hotel-ms` service sends a message to the `fraud-ms` service to check if the reservation is fraudulent. If it is, the `fraud-ms` service cancels the reservation.
 
-### Fraud Microservice
 
-This microservice is responsible for preventing fraudulent activities by analyzing reservation requests and determining their risk level. It receives reservation data from the Reservation microservice and uses machine learning algorithms to determine the likelihood of fraud. 
+## Technologies Used :computer:
+The system uses the following technologies:
 
-### API Gateway
+- Java
+- Spring Boot
+- Docker
+- PostgreSQL
+- RabbitMQ
+- Zipkin
+- Eureka Server
 
-The API Gateway microservice acts as a gateway for external clients to access the Reservation and Fraud microservices. It provides a unified interface for clients and routes requests to the appropriate microservice based on the request path. The API Gateway also provides security through Keycloak integration and rate limiting.
 
-### Eureka Server
+## Installation :gear:
+To install the system, follow these steps:
 
-The Eureka Server is used for service registration and discovery. It allows microservices to register themselves and discover other services in the network. This enables dynamic scaling and failover of microservices.
+1. Clone the repository to your local machine.
+2. Install Docker and Docker Compose on your machine.
+3. Create the necessary databases in PostgreSQL for each microservice.
+4. Create a queue for each microservice in RabbitMQ.
+5. Create an exchange named fraudExchange in RabbitMQ.
+6. Bind the reservation queue to the fraudExchange exchange using the cancelReservation routing key.
+7. Navigate to the root directory of the project and run the following command to start the system:
 
-## Security
+    ```
+    docker-compose up
+    ```
+8. Access the microservices using the following ports:
 
-This application uses Keycloak for secure authentication and authorization. Keycloak is an open-source identity and access management solution that provides features such as single sign-on, user management, and role-based access control. The API Gateway is responsible for communicating with Keycloak to validate client requests and authorize access to protected resources.
+- apigateway: 8080
+- hotel-ms: 8081
+- fraud-ms: 8082
+- trips-ms: 8083
+- agent-ms: 8084
+- trip-ms: 8085
+
+9. Access the Eureka Server using the following port:
+
+- eureka server: 8761
+
+## Usage :rocket:
+
+To use the system, make HTTP requests to the apigateway service, which acts as the API gateway for the system.
+
+The `hotel-ms` service creates and manages reservations, while the `fraud-ms` service detects fraudulent reservations. RabbitMQ is used as a message broker to communicate between the two microservices.
+
+When a reservation is made, the `hotel-ms` service sends a message to the `fraud-ms` service to check if the reservation is fraudulent. If it is, the `fraud-ms` service cancels the reservation.
+
+Zipkin is used to monitor and trace the requests between the microservices.
+
+
+## License :page_facing_up:
+This project is licensed under the MIT License.
+
+
