@@ -84,27 +84,6 @@ services:
       - postgres
       - rabbitmq
 
-  # notification-ms:
-  #   build:
-  #     context: ./Notification-MS
-  #     dockerfile: Dockerfile
-  #   image: notification-ms
-  #   container_name: Notification-MS
-  #   ports:
-  #     - "8083:8083"
-  #   environment:
-  #     spring.data.mongodb.host: mongodb
-  #     spring.data.mongodb.port: 27017
-  #     spring.data.mongodb.username: admin
-  #     spring.data.mongodb.password: admin
-  #   networks:
-  #     - spring
-  #     - mongodb
-  #   depends_on:
-  #     - zipkin
-  #     - eureka-server
-  #     - mongodb
-  #     - rabbitmq
 
   apigw:
     build:
@@ -139,6 +118,19 @@ services:
     networks:
       - spring
 
+  notification-ms:
+    build: ./Notification-MS
+    image: notification-ms
+    container_name: Notification-MS
+    ports:
+      - "3000:3000"
+    environment:
+      MONGO_URL: mongodb://admin:admin@mongodb:27017/sms
+    networks:
+      - spring
+      - mongodb
+    depends_on:
+      - mongodb
 
 
   keycloak:
