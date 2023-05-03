@@ -77,6 +77,26 @@ services:
     depends_on:
       - zipkin
 
+  trips-ms:
+    build:
+      context: ./Trip-MS
+      dockerfile: Dockerfile
+    image: trip-ms
+    container_name: trip-MS
+    ports:
+      - "8090:8090"
+    environment:
+      SPRING_APPLICATION_JSON: '{"eureka":{"client":{"serviceUrl":{"defaultZone":"http://eureka-server:8761/eureka"}}}}'
+      spring.datasource.url: jdbc:postgresql://postgres:5432/trips
+    networks:
+      - spring
+      - postgres
+    depends_on:
+      - zipkin
+      - eureka-server
+      - postgres
+      - rabbitmq
+      
   hotel-ms:
     build:
       context: ./Hotel-MS

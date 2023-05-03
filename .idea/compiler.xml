@@ -9,6 +9,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="agent" />
         <module name="Eureka-server" />
+        <module name="Trip-MS" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -20,6 +21,7 @@
       <module name="Eureka-server" options="-parameters" />
       <module name="agent" options="-parameters" />
       <module name="test" options="-parameters" />
+      <module name="Trip-MS" options="" />
     </option>
   </component>
 </project>
