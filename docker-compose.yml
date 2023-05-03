@@ -84,6 +84,28 @@ services:
       - postgres
       - rabbitmq
 
+  # notification-ms:
+  #   build:
+  #     context: ./Notification-MS
+  #     dockerfile: Dockerfile
+  #   image: notification-ms
+  #   container_name: Notification-MS
+  #   ports:
+  #     - "8083:8083"
+  #   environment:
+  #     spring.data.mongodb.host: mongodb
+  #     spring.data.mongodb.port: 27017
+  #     spring.data.mongodb.username: admin
+  #     spring.data.mongodb.password: admin
+  #   networks:
+  #     - spring
+  #     - mongodb
+  #   depends_on:
+  #     - zipkin
+  #     - eureka-server
+  #     - mongodb
+  #     - rabbitmq
+
   apigw:
     build:
       context: ./api-gateway
@@ -133,35 +155,19 @@ services:
     depends_on:
       - eureka-server
 
-  nodejs:
-    image: node:14
-    container_name: nodejs
-    working_dir: /app
-    volumes:
-      - ./app:/app
-    environment:
-      NODE_ENV: production
-      MONGO_URI: mongodb://mongodb:27017/mydatabase
-    ports:
-      - "3000:3000"
-    networks:
-      - spring
-      - mongodb
-    depends_on:
-      - mongodb
   mongodb:
-    image: mongo:4.4
+    image: mongo
     container_name: mongodb
+    restart: always
     environment:
-      MONGO_INITDB_ROOT_USERNAME: mongo
-      MONGO_INITDB_ROOT_PASSWORD: mongo
-    volumes:
-      - mongodb_data:/data/db
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
     ports:
       - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
     networks:
       - mongodb
-    restart: unless-stopped     
   
 networks:
   postgres:
@@ -174,3 +180,5 @@ networks:
 volumes:
   postgres:
   pgadmin:
+  mongodb_data:
+    driver: local
