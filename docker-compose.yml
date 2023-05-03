@@ -66,7 +66,7 @@ services:
 
   fraud-ms:
     build:
-      context: ./FRAUD-MS
+      context: ./Fraud-MS
       dockerfile: Dockerfile
     image: fraud-ms
     container_name: FRAUD-MS
@@ -83,6 +83,7 @@ services:
       - eureka-server
       - postgres
       - rabbitmq
+
 
   apigw:
     build:
@@ -117,42 +118,59 @@ services:
     networks:
       - spring
 
-  keycloak-postgres:
-    container_name: keycloak-postgres
-    image: postgres:13
-    volumes:
-      - ./postgres_keycloak_data:/var/lib/postgresql/data
+  notification-ms:
+    build: ./Notification-MS
+    image: notification-ms
+    container_name: Notification-MS
+    ports:
+      - "3000:3000"
     environment:
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: keycloak
-      POSTGRES_USER: keycloak
+      MONGO_URL: mongodb://admin:admin@mongodb:27017/sms
+    networks:
+      - spring
+      - mongodb
+    depends_on:
+      - mongodb
 
 
   keycloak:
-    container_name: keycloak
     image: quay.io/keycloak/keycloak:18.0.0
-    command: ["start-dev", "--import-realm"]
     environment:
-      DB_VENDOR: POSTGRES
-      DB_ADDR: keycloak-postgres
-      DB_DATABASE: keycloak
-      DB_USER: keycloak
-      DB_PASSWORD: password
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+      - eureka.client.serviceUrl.defaultZone=http://eureka-server:8761/eureka
     ports:
       - "8181:8080"
-    volumes:
-      - ./realms:/opt/jboss/keycloak/imports/
+    command: start-dev
+    networks:
+      - spring
     depends_on:
-      - keycloak-postgres
+      - eureka-server
 
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - mongodb
+  
 networks:
   postgres:
     driver: bridge
   spring:
     driver: bridge
+  mongodb:
+    driver: bridge  
 
 volumes:
   postgres:
   pgadmin:
+  mongodb_data:
+    driver: local

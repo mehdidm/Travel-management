@@ -10,17 +10,19 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 @EnableWebFluxSecurity
 public class SecurityConfig {
     @Bean
-    public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity serverHttpSecurity){
-        serverHttpSecurity.csrf()
-                .disable()
-                .authorizeExchange(exchange ->exchange
-                        .pathMatchers("/eureka/**")
-                        .permitAll()
-                        .anyExchange()
-                        .authenticated()
-                )
-                .oauth2ResourceServer(ServerHttpSecurity.OAuth2ResourceServerSpec::jwt);
+    public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http){
+       http
+               .csrf()
+               .disable()
+               .authorizeExchange(exchange ->exchange.pathMatchers("/actuator/**", "/eureka/**")
+                       .permitAll()
+                       .anyExchange()
+                       .authenticated()
+               )
 
-       return serverHttpSecurity.build();
+               .oauth2ResourceServer(ServerHttpSecurity.OAuth2ResourceServerSpec::jwt);
+
+
+       return http.build();
     }
 }
