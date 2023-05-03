@@ -10,6 +10,7 @@
         <option value="$PROJECT_DIR$/Hotel-MS/pom.xml" />
         <option value="$PROJECT_DIR$/test/pom.xml" />
         <option value="$PROJECT_DIR$/Agency-MS/pom.xml" />
+        <option value="$PROJECT_DIR$/Eureka-server/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">

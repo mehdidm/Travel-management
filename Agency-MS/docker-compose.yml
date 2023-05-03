@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  mysqldb:
+    container_name: mysqldb
+    image: "mysql:latest"
+    restart: "on-failure"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - '/home/mysql-data-v1:/var/lib/mysql'
+  spring_app:
+    image: "agent-ms:latest"
+    container_name: agent-ms
+    restart: "on-failure"
+    ports:
+      - "9090:8082"
+    depends_on:
+      - mysqldb
